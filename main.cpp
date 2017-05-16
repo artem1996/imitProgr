@@ -44,12 +44,14 @@ int main() {
                 AB2.tick();
         }
         if(!BC1.isBusy()) {
+            bool difficult = B.isDifficult();
             if(B.pop(false))
-                BC1.tick(B.isDifficult());
+                BC1.tick(difficult);
         }
         if(!BC2.isBusy()) {
+            bool difficult = B.isDifficult();
             if(B.pop(true))
-                BC2.tick(B.isDifficult());
+                BC2.tick(difficult);
         }
         //------------------------------------------------
         temp += A.isAbove();
