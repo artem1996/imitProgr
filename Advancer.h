@@ -11,13 +11,13 @@
 
 using namespace std;
 
-class Line {
+class Advancer {
 public:
-    Line(Randomizer* transTime);
+    Advancer(Randomizer* transTime);
     void tick();
     bool isAll();
     bool isBusy();
-    friend ostream& operator<<(ostream& out, Line& line);
+    friend ostream& operator<<(ostream& out, Advancer& line);
 protected:
     int tempTime = 0;
     Randomizer* transTime;

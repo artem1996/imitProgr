@@ -2,15 +2,15 @@
 // Created by note on 11.05.17.
 //
 
-#include "Line.h"
+#include "Advancer.h"
 
-Line::Line(Randomizer* transTime) : transTime(transTime) {}
+Advancer::Advancer(Randomizer* transTime) : transTime(transTime) {}
 
-void Line::tick() {
+void Advancer::tick() {
     tempTime = transTime->getRand();
 }
 
-bool Line::isAll() {
+bool Advancer::isAll() {
     tempTime--;
     if(tempTime == 0) {
         inPut++;
@@ -19,11 +19,11 @@ bool Line::isAll() {
     return false;
 }
 
-bool Line::isBusy() {
+bool Advancer::isBusy() {
     return tempTime > 0;
 }
 
-ostream &operator<<(ostream &out, Line &line) {
+ostream &operator<<(ostream &out, Advancer &line) {
     out << "done: " << line.inPut;
     return out;
 }

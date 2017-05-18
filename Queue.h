@@ -11,21 +11,18 @@
 
 using namespace std;
 
-class Buffer {
+class Queue {
 public:
-    Buffer(int maxSize);
+    Queue(int maxSize);
     void push();
     bool pop();
-    bool watch();
     int isAbove();
+    bool operator<(Queue& second);
 protected:
     int maxSize;
     int size = 0;
 public:
-    int getInPut() const;
-    int getOutPut() const;
-    int getAbove() const;
-    friend ostream& operator<<(ostream& out, Buffer& buffer);
+    friend ostream& operator<<(ostream& out, Queue& buffer);
 
 protected:
     int inPut;
