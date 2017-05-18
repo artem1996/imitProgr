@@ -20,9 +20,6 @@ bool Buffer::pop() {
         return false;
 }
 
-bool Buffer::watch() {
-    return size > 0;
-}
 
 int Buffer::isAbove() {
     if(size > maxSize) {
@@ -32,18 +29,6 @@ int Buffer::isAbove() {
         return tempAbove;
     }
     return 0;
-}
-
-int Buffer::getInPut() const {
-    return inPut;
-}
-
-int Buffer::getOutPut() const {
-    return outPut;
-}
-
-int Buffer::getAbove() const {
-    return above;
 }
 
 ostream &operator<<(ostream &out, Buffer &buffer) {

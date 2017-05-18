@@ -6,13 +6,13 @@
 
 Line::Line(Randomizer* transTime) : transTime(transTime) {}
 
-void Line::tick() {
+void Line::inProgress() {
     tempTime = transTime->getRand();
 }
 
 bool Line::isAll() {
     tempTime--;
-    if(tempTime == 0) {
+    if(!tempTime) {
         inPut++;
         return true;
     }

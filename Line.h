@@ -14,7 +14,7 @@ using namespace std;
 class Line {
 public:
     Line(Randomizer* transTime);
-    void tick();
+    void inProgress();
     bool isAll();
     bool isBusy();
     friend ostream& operator<<(ostream& out, Line& line);
