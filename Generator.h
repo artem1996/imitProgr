@@ -9,16 +9,16 @@
 #include "Randomizer.h"
 #include <iostream>
 #include "Advance.h"
-#include "Buffer.h"
+#include "Queue.h"
 
 using namespace std;
 
-class Generator: protected Randomizer, public Advance {
+class Generator: public Advance {
     int outPut = 0;
     int transCount;
-    Buffer* nextBuf;
+    Queue* nextBuf;
 public:
-    void setNextBuf(Buffer *nextBuf);
+    void setNextBuf(Queue *nextBuf);
     Generator(double min, double max, int count, bool type);
     Generator(double constant, int count);
     Advance* sendResult();

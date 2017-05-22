@@ -4,10 +4,10 @@
 
 #include "Generator.h"
 
-Generator::Generator(double min, double max, int count, bool type): Randomizer(type, min, max), transCount(count) {
+Generator::Generator(double min, double max, int count, bool type): Advance(new Randomizer(type, min, max)), transCount(count) {
 }
 
-Generator::Generator(double constant, int count) : Randomizer(constant), transCount(count) {
+Generator::Generator(double constant, int count) :Advance(new Randomizer(constant)), transCount(count) {
 }
 
 ostream &operator<<(ostream &out, Generator &generator) {
@@ -23,12 +23,11 @@ Advance *Generator::sendResult() {
 
 Advance *Generator::callBack() {
     if(transCount > 0) {
-        tempTime = getRand();
-        return this;
+        return makeEvent();
     }
     return NULL;
 }
 
-void Generator::setNextBuf(Buffer *nextBuf) {
+void Generator::setNextBuf(Queue *nextBuf) {
     Generator::nextBuf = nextBuf;
 }

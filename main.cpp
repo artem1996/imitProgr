@@ -1,68 +1,32 @@
 #include <random>
 #include "iostream"
 #include "Generator.h"
+#include "Chanel.h"
+
 #define NUMOFTRANS 1000
+#define NUMOFCONTROLLERS 3
 
 using namespace std;
 
 int main() {
     srand((unsigned int) time(NULL));
-    const int nrolls=10000;  // number of experiments
-    const int nstars=100;    // maximum number of stars to distribute
-    const int nintervals=10; // number of intervals
-
-    std::default_random_engine generator;
-    std::exponential_distribution<double> distribution(2.5);
-
-    int p[nintervals]={};
-
-    for (int i=0; i<nrolls; ++i) {
-        double number = distribution(generator);
-        cout << number << endl;
-        if (number<1.0) ++p[int(nintervals*number)];
-    }
-
-    std::cout << "exponential_distribution (3.5):" << std::endl;
-    std::cout << std::fixed; std::cout.precision(1);
-
-    for (int i=0; i<nintervals; ++i) {
-        std::cout << float(i)/nintervals << "-" << float(i+1)/nintervals << ": ";
-        std::cout << std::string(p[i]*nstars/nrolls,'*') << std::endl;
-    }
-
-    return 0;
-//    std::random_device rd;
-//    std::mt19937 gene(rd());
-//
-//    // if particles decay once per second on average,
-//    // how much time, in seconds, until the next one?
-//    std::exponential_distribution<> d(0.1);
-//
-//    for(int n=0; n<100; ++n) {
-//        double print = (int) d(gene) % 10;
-//        print += 5;
-//        print += d(gene) / 100.0;
-//        cerr << print << endl;
-//    }
-
     double Time = 0;
     double tempTime;
     Generator gen(5, 15, NUMOFTRANS, false);
-    Buffer A(20);
-    ThresholdBuffer B(25, 20);
-    Line AB1(false, new Randomizer(20)), AB2(true, new Randomizer(false, 15, 25));
-    ThresholdLine BC1(false, new Randomizer(false, 22, 28), new Randomizer(15)), BC2(true, new Randomizer(false, 23, 30), new Randomizer(16));
-    gen.setNextBuf(&A);
-    static Line* lines[] = {&AB1, &AB2};
-    A.setNext(lines);
-    AB1.setPrevBuffer(&A);
-    AB1.setNextBuffer(&B);
-    AB2.setPrevBuffer(&A);
-    AB2.setNextBuffer(&B);
-    B.setLine1(&BC1);
-    B.setLine2(&BC2);
-    BC1.setPrevBuff(&B);
-    BC2.setPrevBuff(&B);
+    Queue* QChanel = new Queue(1000);
+    gen.setNextBuf(QChanel);
+    Chanel* chanel = new Chanel(new Randomizer(false, 7, 13), NUMOFCONTROLLERS);
+    QChanel->setNext(chanel);
+    chanel->setPrevBuff(QChanel);
+    Queue** qControllers = new Queue*[NUMOFCONTROLLERS];
+    Controller** controllers = new Controller*[NUMOFCONTROLLERS];
+    for(int i = 0; i < NUMOFCONTROLLERS; i++) {
+        qControllers[i] = new Queue(10);
+        controllers[i] = new Controller(new Randomizer(33));
+        qControllers[i] -> setNext(controllers[i]);
+        controllers[i]->setPrevBuffer(qControllers[i]);
+    }
+    chanel->setNextBuffs(qControllers);
     std::vector<Advance*> FEC;
     FEC.push_back(&gen);
     while (FEC.size()) {
@@ -71,7 +35,6 @@ int main() {
         for(int i = 0; i < FEC.size(); i++) {
             FEC[i]->decrTime(iteration->getTime());
         }
-        B.setSquare(iteration->getTime());
         Time += iteration->getTime();
         Advance* event = iteration->sendResult();
         if(event != NULL) {
@@ -100,13 +63,12 @@ int main() {
             }
         }
     }
-    double AvgC = B.getSquare()/Time;
     cout << "Total: " << NUMOFTRANS << "; Time: " << Time << endl;
     cout << "Generator: " << gen << endl;
-    cout << "A: " << A << endl;
-    cout << "AB1: " << AB1 << endl;
-    cout << "AB2: " << AB2 << endl;
-    cout << "B: " << B << "; AVG.C: " << AvgC << "; MAX: " << B.getMAX() << endl;
-    cout << "BC1: " << BC1 << endl;
-    cout << "BC2: " << BC2 << endl;
+    cout << "QChanel: " << *QChanel << endl;
+    cout << "Chanel: " << *chanel << endl;
+    for(int i = 0; i < NUMOFCONTROLLERS; i++) {
+        cout << "QController" << i << ": " << *qControllers[i] << endl;
+        cout << "Controller" << i << ": " << *controllers[i] << endl;
+    }
 }

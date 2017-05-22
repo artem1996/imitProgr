@@ -18,8 +18,8 @@ public:
     Randomizer(bool randType, double min, double max);
     double getRand();
 private:
-    std::default_random_engine generator;
-    std::exponential_distribution<double> distribution;
+//    std::default_random_engine generator;
+//    std::exponential_distribution<double> distribution;
     bool isConstant;
     bool randType;      // true = exponential, false = linear
     double min;

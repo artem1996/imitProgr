@@ -18,7 +18,7 @@ bool Advance::operator<(Advance &second) {
 }
 
 bool Advance::isBusy() {
-    return tempTime > 0;
+    return busy;
 }
 
 Advance *Advance::sendResult() {
@@ -31,3 +31,16 @@ Advance *Advance::callBack() {
     return nullptr;
 }
 
+Advance* Advance::makeEvent() {
+    busy = true;
+    tempTime = randomizer->getRand();
+    return this;
+}
+
+Advance::Advance(Randomizer *randomizer): randomizer(randomizer) {
+}
+
+ostream &operator<<(ostream &out, Advance &line) {
+    out << "done: " << line.inPut;
+    return out;
+}

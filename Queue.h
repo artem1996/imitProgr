@@ -9,25 +9,24 @@
 #include <vector>
 #include <iostream>
 #include "Advance.h"
-#include "Line.h"
-class Line;
+#include "Controller.h"
+class Controller;
 
 using namespace std;
 
-class Buffer {
+class Queue {
 public:
-    Buffer(int maxSize);
-    void push();
+    Queue(int maxSize);
     bool pop();
-    int isAbove();
     Advance* getResult();
-    void setNext(Line **next);
+    void setNext(Advance *next);
 protected:
     int maxSize;
     int size = 0;
-    Line** nextEvent;
+    Advance* nextEvent;
 public:
-    friend ostream& operator<<(ostream& out, Buffer& buffer);
+    bool operator<(Queue &second);
+    friend ostream& operator<<(ostream& out, Queue& buffer);
 
 protected:
     int inPut;
