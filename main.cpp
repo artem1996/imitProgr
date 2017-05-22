@@ -12,17 +12,17 @@ int main() {
     srand((unsigned int) time(NULL));
     double Time = 0;
     double tempTime;
-    Generator gen(5, 15, NUMOFTRANS, false);
+    Generator gen(5., 15., NUMOFTRANS);
     Queue* QChanel = new Queue(1000);
     gen.setNextBuf(QChanel);
-    Chanel* chanel = new Chanel(new Randomizer(false, 7, 13), NUMOFCONTROLLERS);
+    Chanel* chanel = new Chanel(new Randomizer(7., 13.), NUMOFCONTROLLERS);
     QChanel->setNext(chanel);
     chanel->setPrevBuff(QChanel);
     Queue** qControllers = new Queue*[NUMOFCONTROLLERS];
     Controller** controllers = new Controller*[NUMOFCONTROLLERS];
     for(int i = 0; i < NUMOFCONTROLLERS; i++) {
         qControllers[i] = new Queue(10);
-        controllers[i] = new Controller(new Randomizer(33));
+        controllers[i] = new Controller(new Randomizer(false, 33));
         qControllers[i] -> setNext(controllers[i]);
         controllers[i]->setPrevBuffer(qControllers[i]);
     }

@@ -4,10 +4,10 @@
 
 #include "Generator.h"
 
-Generator::Generator(double min, double max, int count, bool type): Advance(new Randomizer(type, min, max)), transCount(count) {
+Generator::Generator(double min, double max, int count): Advance(new Randomizer(min, max)), transCount(count) {
 }
 
-Generator::Generator(double constant, int count) :Advance(new Randomizer(constant)), transCount(count) {
+Generator::Generator(bool type, double constant, int count) :Advance(new Randomizer(type, constant)), transCount(count) {
 }
 
 ostream &operator<<(ostream &out, Generator &generator) {

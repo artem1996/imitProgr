@@ -19,8 +19,8 @@ class Generator: public Advance {
     Queue* nextBuf;
 public:
     void setNextBuf(Queue *nextBuf);
-    Generator(double min, double max, int count, bool type);
-    Generator(double constant, int count);
+    Generator(double min, double max, int count);
+    Generator(bool type, double constant, int count);
     Advance* sendResult();
     Advance* callBack();
     friend ostream& operator<<(ostream& out, Generator& generator);
