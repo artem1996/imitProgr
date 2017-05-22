@@ -5,15 +5,23 @@
 #include <random>
 #include "Randomizer.h"
 
-Randomizer::Randomizer(bool randType, double min, double max) : isConstant(false), randType(randType),
-                                                                           min(min), max(max) {
+Randomizer::Randomizer(double min, double max) : isLinear(true), min(min), max(max) {
 }
 
-Randomizer::Randomizer(double constant) : isConstant(true), randType(false),
-                                                                           min(constant), max(constant) {}
+Randomizer::Randomizer(bool constantOrExp, double middle) : isLinear(false), constOrExp(constantOrExp),
+                                                                           min(middle), max(middle) {
+    if(constantOrExp) {
+        static int num = 0;
+        generat = num++;
+    }
+}
 double Randomizer::expRand() {
-    double random = exp(-(double)rand()/RAND_MAX);
-    return random;
+    static std::default_random_engine generator[2];
+    static std::exponential_distribution<> distribution[2];
+    if(!generated) {
+        distribution[generat] = std::exponential_distribution<>(1/min);
+    }
+    return  distribution[generat](generator[generat]);
 }
 
 double Randomizer::linRand() {
@@ -21,8 +29,8 @@ double Randomizer::linRand() {
 }
 
 double Randomizer::getRand() {
-    if(isConstant) return min;
+    if(isLinear) return linRand();
     else
-        if(randType) return expRand();
-        else return linRand();
+        if(constOrExp) return expRand();
+        else return min;
 }

@@ -19,8 +19,8 @@ class Generator: protected Randomizer, public Advance {
     Buffer* nextBuf;
 public:
     void setNextBuf(Buffer *nextBuf);
-    Generator(double min, double max, int count, bool type);
-    Generator(double constant, int count);
+    Generator(double min, double max, int count);
+    Generator(double constant, int count, bool type);
     Advance* sendResult();
     Advance* callBack();
     friend ostream& operator<<(ostream& out, Generator& generator);
