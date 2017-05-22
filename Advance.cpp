@@ -22,12 +22,10 @@ bool Advance::isBusy() {
 }
 
 Advance *Advance::sendResult() {
-    cout << "advanceend" << endl;
-    return nullptr;
+    return NULL;
 }
 
 Advance *Advance::callBack() {
-    cout << "advancecallback" << endl;
-    return nullptr;
+    return NULL;
 }
 

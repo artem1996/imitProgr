@@ -6,8 +6,9 @@
 using namespace std;
 
 int main() {
+    srand((unsigned int) time(NULL));
     double Time = 0;
-    double tempTime;
+    //double tempTime;
     Generator gen(5., 15., NUMOFTRANS);
     Buffer A(20);
     ThresholdBuffer B(25, 20);
