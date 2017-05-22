@@ -7,21 +7,38 @@
 
 
 #include "Randomizer.h"
+#include "Advance.h"
+#include "ThresholdBuffer.h"
 #include <iostream>
 
 using namespace std;
 
-class Line {
+class Buffer;
+class ThresholdBuffer;
+
+class Line: public Advance {
 public:
-    Line(Randomizer* transTime);
+    Line(bool label, Randomizer* transTime);
     void inProgress();
     bool isAll();
+    Advance* sendResult();
+    Advance* callBack();
+    Advance* makeEvent();
     bool isBusy();
     friend ostream& operator<<(ostream& out, Line& line);
 protected:
-    int tempTime = 0;
     Randomizer* transTime;
     int inPut = 0;
+    bool label;
+    bool busy = false;
+    Buffer* prevBuffer;
+public:
+    void setPrevBuffer(Buffer *prevBuffer);
+
+    void setNextBuffer(ThresholdBuffer *nextBuffer);
+
+protected:
+    ThresholdBuffer* nextBuffer;
 };
 
 

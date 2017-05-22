@@ -4,7 +4,7 @@
 
 #include "Line.h"
 
-Line::Line(Randomizer* transTime) : transTime(transTime) {}
+Line::Line(bool label, Randomizer* transTime) : transTime(transTime), label(label) {}
 
 void Line::inProgress() {
     tempTime = transTime->getRand();
@@ -19,11 +19,38 @@ bool Line::isAll() {
     return false;
 }
 
-bool Line::isBusy() {
-    return tempTime > 0;
-}
-
 ostream &operator<<(ostream &out, Line &line) {
     out << "done: " << line.inPut;
     return out;
+}
+
+Advance *Line::makeEvent() {
+    busy = true;
+    tempTime = transTime->getRand();
+    return this;
+}
+
+Advance *Line::callBack() {
+    if(prevBuffer->pop()) {
+        return makeEvent();
+    }
+    return NULL;
+}
+
+Advance *Line::sendResult() {
+    busy = false;
+    inPut++;
+    return nextBuffer->getResult(label);
+}
+
+void Line::setPrevBuffer(Buffer *prevBuffer) {
+    Line::prevBuffer = prevBuffer;
+}
+
+void Line::setNextBuffer(ThresholdBuffer *nextBuffer) {
+    Line::nextBuffer = nextBuffer;
+}
+
+bool Line::isBusy() {
+    return busy;
 }

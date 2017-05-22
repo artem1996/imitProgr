@@ -2,23 +2,25 @@
 // Created by note on 11.05.17.
 //
 
+#include <random>
 #include "Randomizer.h"
 
-Randomizer::Randomizer(bool randType, int min, int max) : isConstant(false), randType(randType),
-                                                                           min(min), max(max) {}
+Randomizer::Randomizer(bool randType, double min, double max) : isConstant(false), randType(randType),
+                                                                           min(min), max(max) {
+}
 
-Randomizer::Randomizer(int constant) : isConstant(true), randType(false),
+Randomizer::Randomizer(double constant) : isConstant(true), randType(false),
                                                                            min(constant), max(constant) {}
-int Randomizer::expRand() {
-    double random = (max - min) * exp(-(double)rand()/RAND_MAX);
-    return min + (int) random + (random - (int) random < 0.5 ? 0 : 1);
+double Randomizer::expRand() {
+    double random = exp(-(double)rand()/RAND_MAX);
+    return random;
 }
 
-int Randomizer::linRand() {
-    return min + rand() % (max - min);
+double Randomizer::linRand() {
+    return min + ((double) rand()) / RAND_MAX * (max - min);
 }
 
-int Randomizer::getRand() {
+double Randomizer::getRand() {
     if(isConstant) return min;
     else
         if(randType) return expRand();

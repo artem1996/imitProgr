@@ -35,3 +35,23 @@ ostream &operator<<(ostream &out, Buffer &buffer) {
     out << "inPut: " << buffer.inPut << "; outPut: " << buffer.outPut << "; above: " << buffer.above;
     return out;
 }
+
+Advance* Buffer::getResult() {
+    inPut++;
+    size++;
+    if(!nextEvent[0]->isBusy() && pop()) {
+        return nextEvent[0]->makeEvent();
+    }
+    if(!nextEvent[1]->isBusy() && pop()) {
+        return nextEvent[1]->makeEvent();
+    }
+    if(size > maxSize) {
+        above += size - maxSize;
+        size = maxSize;
+    }
+    return NULL;
+}
+
+void Buffer::setNext(Line **next) {
+    nextEvent = next;
+}

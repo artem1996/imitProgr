@@ -9,22 +9,23 @@
 #include <math.h>
 #include <cstdlib>
 
-#define LOFFSET log(RAND_MAX)
 
 class Randomizer {
 
 private:
 public:
-    Randomizer(int constant);
-    Randomizer(bool randType, int min, int max);
-    int getRand();
+    Randomizer(double constant);
+    Randomizer(bool randType, double min, double max);
+    double getRand();
 private:
+    std::default_random_engine generator;
+    std::exponential_distribution<double> distribution;
     bool isConstant;
     bool randType;      // true = exponential, false = linear
-    int min;
-    int max;
-    int linRand();
-    int expRand();
+    double min;
+    double max;
+    double linRand();
+    double expRand();
 };
 
 

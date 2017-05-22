@@ -8,16 +8,21 @@
 #include <stdlib.h>
 #include "Randomizer.h"
 #include <iostream>
+#include "Advance.h"
+#include "Buffer.h"
 
 using namespace std;
 
-class Generator: protected Randomizer {
-    int temp = 0;
+class Generator: protected Randomizer, public Advance {
     int outPut = 0;
+    int transCount;
+    Buffer* nextBuf;
 public:
-    Generator(int min, int max, bool type);
-    Generator(int constant);
-    bool tick();
+    void setNextBuf(Buffer *nextBuf);
+    Generator(double min, double max, int count, bool type);
+    Generator(double constant, int count);
+    Advance* sendResult();
+    Advance* callBack();
     friend ostream& operator<<(ostream& out, Generator& generator);
 };
 

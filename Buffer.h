@@ -8,6 +8,9 @@
 
 #include <vector>
 #include <iostream>
+#include "Advance.h"
+#include "Line.h"
+class Line;
 
 using namespace std;
 
@@ -17,9 +20,12 @@ public:
     void push();
     bool pop();
     int isAbove();
+    Advance* getResult();
+    void setNext(Line **next);
 protected:
     int maxSize;
     int size = 0;
+    Line** nextEvent;
 public:
     friend ostream& operator<<(ostream& out, Buffer& buffer);
 

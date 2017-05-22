@@ -4,25 +4,31 @@
 
 #include "Generator.h"
 
-Generator::Generator(int min, int max, bool type): Randomizer(type, min, max) {
+Generator::Generator(double min, double max, int count, bool type): Randomizer(type, min, max), transCount(count) {
 }
 
-bool Generator::tick() {
-    temp--;
-    if(temp <= 0) {
-        temp = getRand();
-        outPut++;
-        return true;
-    } else {
-        return false;
-    }
-}
-
-Generator::Generator(int constant) : Randomizer(constant) {
-
+Generator::Generator(double constant, int count) : Randomizer(constant), transCount(count) {
 }
 
 ostream &operator<<(ostream &out, Generator &generator) {
     out << "generated: " << generator.outPut;
     return out;
+}
+
+Advance *Generator::sendResult() {
+    transCount--;
+    outPut++;
+    return nextBuf->getResult();
+}
+
+Advance *Generator::callBack() {
+    if(transCount > 0) {
+        tempTime = getRand();
+        return this;
+    }
+    return NULL;
+}
+
+void Generator::setNextBuf(Buffer *nextBuf) {
+    Generator::nextBuf = nextBuf;
 }
