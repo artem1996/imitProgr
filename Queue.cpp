@@ -4,39 +4,43 @@
 
 #include "Queue.h"
 
-Queue::Queue(int maxSize) : maxSize(maxSize), inPut(0), outPut(0), above(0) {}
+Queue::Queue(bool difficult) : difficult(difficult) {}
 
-bool Queue::pop() {
-    if(size > 0) {
-        size--;
-        outPut++;
-        return true;
-    } else
-        return false;
+void Queue::setTransfer(Transfer *trans) {
+    transfer = trans;
 }
 
-ostream &operator<<(ostream &out, Queue &buffer) {
-    out << "inPut: " << buffer.inPut << "; outPut: " << buffer.outPut << "; above: " << buffer.above;
-    return out;
-}
-
-Advance* Queue::getResult() {
+Advance *Queue::getQueue(bool difficult) {
     inPut++;
-    size++;
-    if(!nextEvent->isBusy() && pop()) {
-        return nextEvent->makeEvent();
+    for(int i = 0; i < countBarbers; i++) {
+        if(!barbers[i]->isBusy()) {
+            outFirst++;
+            return barbers[i]->makeEvent(difficult);
+        }
     }
-    if(size > maxSize) {
-        above += size - maxSize;
-        size = maxSize;
+    if(!transfer->tick()) {
+        aboveFirst++;
+        return NULL;
     }
+    return new Queue(difficult);
+}
+
+void Queue::setBurbers(Barber **pBarber, int pCountBarbers) {
+    barbers = pBarber;
+    countBarbers = pCountBarbers;
+}
+
+Advance *Queue::sendResult() {
+    for(int i = 0; i < countBarbers; i++) {
+        if(!barbers[i]->isBusy()) {
+            outSecond++;
+            return barbers[i]->makeEvent(difficult);
+        }
+    }
+    aboveSecond++;
     return NULL;
 }
 
-void Queue::setNext(Advance *next) {
-    nextEvent = next;
-}
-
-bool Queue::operator<(Queue &second) {
-    return (this->size < second.size);
+void Queue::print() {
+    cout << "Queue: inPut: " << inPut << "; firstOut: " << outFirst << "; secondOut: " << outSecond << "; firstAbove: " << aboveFirst << "; secondAbove: " << aboveSecond << endl;
 }

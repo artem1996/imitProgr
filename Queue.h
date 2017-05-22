@@ -9,29 +9,30 @@
 #include <vector>
 #include <iostream>
 #include "Advance.h"
-#include "Controller.h"
-class Controller;
+#include "Barber.h"
+#include "Transfer.h"
 
 using namespace std;
 
-class Queue {
-public:
-    Queue(int maxSize);
-    bool pop();
-    Advance* getResult();
-    void setNext(Advance *next);
-protected:
-    int maxSize;
-    int size = 0;
-    Advance* nextEvent;
-public:
-    bool operator<(Queue &second);
-    friend ostream& operator<<(ostream& out, Queue& buffer);
+class Barber;
 
-protected:
-    int inPut;
-    int outPut;
-    int above;
+class Queue: Advance {
+    static Transfer *transfer;
+    static Barber **barbers;
+    static int countBarbers;
+    static int inPut;
+    static int outFirst;
+    static int outSecond;
+    static int aboveFirst;
+    static int aboveSecond;
+    bool difficult;
+    Queue(bool difficult);
+public:
+    static Advance* getQueue(bool difficult);
+    static void setTransfer(Transfer*);
+    static void setBurbers(Barber**, int);
+    static void print();
+    Advance* sendResult();
 };
 
 

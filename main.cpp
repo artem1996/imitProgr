@@ -1,34 +1,32 @@
 #include <random>
 #include "iostream"
 #include "Generator.h"
-#include "Chanel.h"
 
-#define NUMOFTRANS 1000
-#define NUMOFCONTROLLERS 3
+double Time = 0;
 
 using namespace std;
 
+Transfer* Queue::transfer;
+Barber** Queue::barbers;
+int Queue::countBarbers;
+int Queue::inPut;
+int Queue::outFirst;
+int Queue::outSecond;
+int Queue::aboveFirst;
+int Queue::aboveSecond;
+
 int main() {
     srand((unsigned int) time(NULL));
-    double Time = 0;
-    double tempTime;
-    Generator gen(5, 15, NUMOFTRANS, false);
-    Queue* QChanel = new Queue(1000);
-    gen.setNextBuf(QChanel);
-    Chanel* chanel = new Chanel(new Randomizer(false, 7, 13), NUMOFCONTROLLERS);
-    QChanel->setNext(chanel);
-    chanel->setPrevBuff(QChanel);
-    Queue** qControllers = new Queue*[NUMOFCONTROLLERS];
-    Controller** controllers = new Controller*[NUMOFCONTROLLERS];
-    for(int i = 0; i < NUMOFCONTROLLERS; i++) {
-        qControllers[i] = new Queue(10);
-        controllers[i] = new Controller(new Randomizer(33));
-        qControllers[i] -> setNext(controllers[i]);
-        controllers[i]->setPrevBuffer(qControllers[i]);
-    }
-    chanel->setNextBuffs(qControllers);
+    Generator gen(15, 35, false, false), addGen(25, 65, false, true);
+    Queue::setTransfer(new Transfer(0.4));
+    Barber **barbers = new Barber*[3];
+    barbers[0] = new Barber(new Randomizer(30), new Randomizer(55), 210, 30);
+    barbers[1] = new Barber(new Randomizer(30), new Randomizer(55), 240, 30);
+    barbers[2] = new Barber(new Randomizer(30), new Randomizer(55), 270, 30);
+    Queue::setBurbers(barbers, 3);
     std::vector<Advance*> FEC;
     FEC.push_back(&gen);
+    FEC.push_back(&addGen);
     while (FEC.size()) {
         Advance* iteration = FEC[0];
         FEC.erase(FEC.begin());
@@ -49,11 +47,11 @@ int main() {
                 FEC.push_back(event);
             }
         }
-        event = iteration->callBack();
+        event = iteration->callback();
         if(event != NULL) {
             int i = 0;
-            for(i = 0; i < FEC.size(); i++) {
-                if(FEC[i]->getTime() > event->getTime()) {
+            for(; i < FEC.size(); i++) {
+                if(*event < *FEC[i]) {
                     FEC.insert(FEC.begin() + i, event);
                     break;
                 }
@@ -63,12 +61,11 @@ int main() {
             }
         }
     }
-    cout << "Total: " << NUMOFTRANS << "; Time: " << Time << endl;
-    cout << "Generator: " << gen << endl;
-    cout << "QChanel: " << *QChanel << endl;
-    cout << "Chanel: " << *chanel << endl;
-    for(int i = 0; i < NUMOFCONTROLLERS; i++) {
-        cout << "QController" << i << ": " << *qControllers[i] << endl;
-        cout << "Controller" << i << ": " << *controllers[i] << endl;
-    }
+    cout << "Time: " << Time << endl;
+    cout << "Easy Generator: " << gen << endl;
+    cout << "Difficult Generator: " << addGen << endl;
+    Queue::print();
+    cout << "Barber0: " << *barbers[0] << endl;
+    cout << "Barber1: " << *barbers[1] << endl;
+    cout << "Barber2: " << *barbers[2] << endl;
 }

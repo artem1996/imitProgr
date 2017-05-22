@@ -10,19 +10,18 @@
 #include <iostream>
 #include "Advance.h"
 #include "Queue.h"
+#define THRESHOLDTIME 240
 
 using namespace std;
 
-class Generator: public Advance {
+class Generator: public Advance, public Randomizer {
     int outPut = 0;
-    int transCount;
-    Queue* nextBuf;
+    bool difficult;
 public:
-    void setNextBuf(Queue *nextBuf);
-    Generator(double min, double max, int count, bool type);
-    Generator(double constant, int count);
+    Generator(double min, double max, bool type, bool difficult);
+    Generator(double constant, bool difficult);
     Advance* sendResult();
-    Advance* callBack();
+    Advance* callback();
     friend ostream& operator<<(ostream& out, Generator& generator);
 };
 
